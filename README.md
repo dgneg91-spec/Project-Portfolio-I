@@ -44,7 +44,21 @@ Each week I will summarize my milestone activity and progress by writing a stand
 
 ### Week 1
 
-Replace this paragraph with your stand up for this week. Use the prompts above to summarize your most recent milestone activity and work.
+Overview
+
+This week I focused on getting the foundation of my project set up correctly. I finished creating and configuring my GitHub repository, added the required starter files, created the main and dev branches, set up the GitHub Project board, and added the instructor to both the repository and the Project. I also cloned the repository locally and started building the core structure of Crypt of the Damned.
+
+Challenges
+
+The main challenge this week was getting familiar with the full GitHub workflow and making sure everything was organized the way the course requires. I also had to correct my workflow after accidentally committing some work to the main branch instead of dev, but I was able to merge the changes into dev and continue from there.
+
+Accomplishments
+
+One thing I improved on this week is project organization. I also created the initial class structure for the game, built a working menu and combat loop, tested the program successfully, and became more comfortable using branches, commits, Issues, and the Project board.
+
+Next Steps
+
+My next priority is to continue developing the inventory and item system, then begin working on dungeon progression and multiple encounters. I also plan to continue testing each feature as I add it and keep the Project board updated to reflect my progress.
 
 ### Week 2
 
