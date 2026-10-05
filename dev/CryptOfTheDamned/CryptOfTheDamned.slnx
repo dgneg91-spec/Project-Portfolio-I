@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CryptOfTheDamned.vcxproj" Id="89e4f827-4fed-430c-b3ec-a6fd2c0da0bd" />
+</Solution>
