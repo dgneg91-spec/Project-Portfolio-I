@@ -109,8 +109,12 @@ void Game::StartGame()
 
     player.SetName(playerName);
 
+    Item healingPotion("Healing Potion", "Healing", 30);
+    player.AddItem(healingPotion);
+
     std::cout << "\nWelcome, " << player.GetName() << ".\n";
     std::cout << "You descend into the Crypt of the Damned...\n";
+    std::cout << "A Healing Potion has been added to your inventory.\n";
 
     Enemy enemy("Skeleton Warrior", 40, 8, 10);
 
@@ -135,9 +139,10 @@ void Game::StartCombat(Enemy& enemy)
         std::cout << "2. Defend\n";
         std::cout << "3. View Stats\n";
         std::cout << "4. View Inventory\n";
+        std::cout << "5. Use Item\n";
         std::cout << "\nEnter choice: ";
 
-        int choice = GetMenuChoice(1, 4);
+        int choice = GetMenuChoice(1, 5);
 
         switch (choice)
         {
@@ -163,6 +168,36 @@ void Game::StartCombat(Enemy& enemy)
         case 4:
             player.DisplayInventory();
             continue;
+
+        case 5:
+        {
+            if (player.GetInventorySize() == 0)
+            {
+                std::cout << "\nYour inventory is empty.\n";
+                continue;
+            }
+
+            player.DisplayInventory();
+
+            std::cout << "\nChoose an item to use: ";
+
+            int itemChoice = GetMenuChoice(1, player.GetInventorySize());
+
+            bool itemUsed = player.UseItem(itemChoice - 1);
+
+            if (!itemUsed)
+            {
+                continue;
+            }
+
+            std::cout << "Current Health: "
+                << player.GetHealth()
+                << "/"
+                << player.GetMaxHealth()
+                << "\n";
+
+            continue;
+        }
         }
 
         if (enemy.IsAlive())

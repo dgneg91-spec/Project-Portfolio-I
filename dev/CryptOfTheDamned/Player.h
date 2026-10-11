@@ -40,4 +40,7 @@ public:
 
     void DisplayStats() const;
     void DisplayInventory() const;
+
+    bool UseItem(int index);
+    int GetInventorySize() const;
 };

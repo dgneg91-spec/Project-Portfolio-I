@@ -115,6 +115,56 @@ void Player::DisplayInventory() const
 
     for (size_t i = 0; i < inventory.size(); i++)
     {
-        std::cout << i + 1 << ". " << inventory[i].GetName() << "\n";
+        std::cout << i + 1 << ". "
+            << inventory[i].GetName()
+            << " - "
+            << inventory[i].GetType()
+            << " ("
+            << inventory[i].GetEffectValue()
+            << ")\n";
     }
+}
+
+bool Player::UseItem(int index)
+{
+    if (index < 0 || index >= static_cast<int>(inventory.size()))
+    {
+        return false;
+    }
+
+    Item item = inventory[index];
+
+    if (item.GetType() == "Healing")
+    {
+        if (health >= maxHealth)
+        {
+            std::cout << "Your health is already full.\n";
+            return false;
+        }
+
+        int healthBefore = health;
+
+        Heal(item.GetEffectValue());
+
+        int amountHealed = health - healthBefore;
+
+        std::cout << "You used "
+            << item.GetName()
+            << " and restored "
+            << amountHealed
+            << " health.\n";
+
+        inventory.erase(inventory.begin() + index);
+
+        return true;
+    }
+
+    std::cout << "That item cannot be used right now.\n";
+
+    return false;
+}
+
+int Player::GetInventorySize() const
+{
+    return static_cast<int>(inventory.size());
 }
