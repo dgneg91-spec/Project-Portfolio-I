@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 Game::Game()
 {
@@ -11,18 +12,157 @@ Game::Game()
 
 void Game::DisplayTitle() const
 {
-    std::cout << "====================================\n";
-    std::cout << "        CRYPT OF THE DAMNED\n";
-    std::cout << "====================================\n";
+    std::cout << R"(
+============================================================
+                   CRYPT OF THE DAMNED
+============================================================
+
+                         ______
+                      .-"      "-.
+                     /            \
+                    |              |
+                    |,  .-.  .-.  ,|
+                    | )(_o/  \o_)( |
+                    |/     /\     \|
+                    (_     ^^     _)
+                     \__|IIIIII|__/
+                      \ IIIIIIII /
+                       `--------`
+
+                   ENTER IF YOU DARE
+
+============================================================
+)";
 }
 
 void Game::DisplayMainMenu() const
 {
-    std::cout << "\n1. Start Game\n";
+    std::cout << "\n================ MAIN MENU ================\n";
+    std::cout << "1. Start Game\n";
     std::cout << "2. View Player Stats\n";
     std::cout << "3. View Inventory\n";
     std::cout << "4. Exit\n";
+    std::cout << "===========================================\n";
     std::cout << "\nEnter choice: ";
+}
+
+void Game::DisplayEnemyArt(const std::string& enemyName) const
+{
+    if (enemyName == "Skeleton Warrior")
+    {
+        std::cout << R"(
+
+              .-.
+             (o.o)
+              |=|
+             __|__
+           //.=|=.\\
+          // .=|=. \\
+          \\ .=|=. //
+           \\(_=_)//
+            (:| |:)
+             || ||
+             () ()
+             || ||
+             || ||
+            ==' '==
+
+        SKELETON WARRIOR
+)";
+    }
+    else if (enemyName == "Crypt Ghoul")
+    {
+        std::cout << R"(
+
+              .------.
+             /        \
+            /  _    _  \
+           |  / \  / \  |
+           |  \_/  \_/  |
+           |     /\     |
+           |   .____.   |
+            \  \____/  /
+             \        /
+              \______/
+              /|    |\
+             / |    | \
+            /  |    |  \
+               |    |
+              /      \
+
+           CRYPT GHOUL
+)";
+    }
+    else if (enemyName == "Bone Knight")
+    {
+        std::cout << R"(
+
+                 /\
+                /  \
+               /____\
+              |      |
+              |  /\  |
+              | |  | |
+              | |  | |
+            __|_|__|_|__
+           /            \
+          /   ________   \
+         |   /        \   |
+         |  |          |  |
+         |  |          |  |
+         |  |__________|  |
+          \              /
+           \____________/
+
+             BONE KNIGHT
+)";
+    }
+}
+
+void Game::DisplayVictoryArt() const
+{
+    std::cout << R"(
+
+============================================================
+
+                     VICTORY
+
+                  \       /
+                   \     /
+                    \   /
+                     \ /
+                      V
+
+                 ______________
+                |              |
+                |   SURVIVOR   |
+                |______________|
+
+          THE CRYPT COULD NOT CLAIM YOU
+
+============================================================
+)";
+}
+
+void Game::DisplayDeathArt() const
+{
+    std::cout << R"(
+
+============================================================
+
+                    YOU HAVE FALLEN
+
+                         _____
+                       /       \
+                      |  x   x  |
+                      |    ^    |
+                      |  \___/  |
+                       \_______/
+
+                   REST AMONG THE DEAD
+
+============================================================
+)";
 }
 
 int Game::GetMenuChoice(int minChoice, int maxChoice) const
@@ -116,13 +256,71 @@ void Game::StartGame()
     std::cout << "You descend into the Crypt of the Damned...\n";
     std::cout << "A Healing Potion has been added to your inventory.\n";
 
-    Enemy enemy("Skeleton Warrior", 40, 8, 10);
+    StartDungeon();
+}
 
-    StartCombat(enemy);
+void Game::StartDungeon()
+{
+    std::vector<Enemy> enemies;
+
+    enemies.push_back(Enemy("Skeleton Warrior", 40, 8, 10));
+    enemies.push_back(Enemy("Crypt Ghoul", 55, 10, 15));
+    enemies.push_back(Enemy("Bone Knight", 70, 12, 25));
+
+    for (size_t i = 0; i < enemies.size(); i++)
+    {
+        if (!player.IsAlive())
+        {
+            break;
+        }
+
+        std::cout << "\n============================================================\n";
+        std::cout << "                         FLOOR " << i + 1 << "\n";
+        std::cout << "============================================================\n";
+
+        if (i == 0)
+        {
+            std::cout << "\nCold air crawls across your skin.\n";
+            std::cout << "Bones scrape against the stone ahead...\n";
+        }
+        else if (i == 1)
+        {
+            std::cout << "\nA rotten stench fills the corridor.\n";
+            std::cout << "Something hungry moves in the darkness...\n";
+        }
+        else if (i == 2)
+        {
+            std::cout << "\nHeavy footsteps shake the crypt floor.\n";
+            std::cout << "An armored figure blocks your path...\n";
+        }
+
+        StartCombat(enemies[i]);
+
+        if (player.IsAlive() && i < enemies.size() - 1)
+        {
+            std::cout << "\nYou survived Floor " << i + 1 << ".\n";
+            std::cout << "You continue deeper into the crypt...\n";
+
+            Item healingPotion("Healing Potion", "Healing", 30);
+            player.AddItem(healingPotion);
+
+            std::cout << "You found another Healing Potion.\n";
+        }
+    }
+
+    if (player.IsAlive())
+    {
+        DisplayVictoryArt();
+
+        std::cout << "\nYou survived every encounter in the crypt!\n";
+        std::cout << "Final Gold: " << player.GetGold() << "\n";
+    }
 }
 
 void Game::StartCombat(Enemy& enemy)
 {
+    DisplayEnemyArt(enemy.GetName());
+
     std::cout << "\nA " << enemy.GetName() << " appears!\n";
 
     while (player.IsAlive() && enemy.IsAlive())
@@ -226,6 +424,8 @@ void Game::StartCombat(Enemy& enemy)
     }
     else
     {
+        DisplayDeathArt();
+
         std::cout << "\nYou have fallen in the Crypt of the Damned...\n";
         running = false;
     }
