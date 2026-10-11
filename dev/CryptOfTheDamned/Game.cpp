@@ -1,7 +1,8 @@
 #include "Game.h"
 
 #include <iostream>
-#include <limits>
+#include <string>
+#include <stdexcept>
 
 Game::Game()
 {
@@ -26,27 +27,38 @@ void Game::DisplayMainMenu() const
 
 int Game::GetMenuChoice(int minChoice, int maxChoice) const
 {
-    int choice;
+    std::string input;
 
     while (true)
     {
-        std::cin >> choice;
+        std::getline(std::cin, input);
 
-        if (std::cin.fail())
+        try
         {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Invalid input. Enter a number: ";
+            size_t charactersUsed = 0;
+            int choice = std::stoi(input, &charactersUsed);
+
+            if (charactersUsed != input.length())
+            {
+                throw std::invalid_argument("Extra characters entered.");
+            }
+
+            if (choice < minChoice || choice > maxChoice)
+            {
+                throw std::out_of_range("Choice outside valid range.");
+            }
+
+            return choice;
         }
-        else if (choice < minChoice || choice > maxChoice)
+        catch (const std::invalid_argument&)
         {
-            std::cout << "Please enter a number between "
+            std::cout << "Invalid input. Please enter a whole number between "
                 << minChoice << " and " << maxChoice << ": ";
         }
-        else
+        catch (const std::out_of_range&)
         {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            return choice;
+            std::cout << "That choice is out of range. Please enter a number between "
+                << minChoice << " and " << maxChoice << ": ";
         }
     }
 }
