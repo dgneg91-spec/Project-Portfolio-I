@@ -62,7 +62,25 @@ My next priority is to continue developing the inventory and item system, then b
 
 ### Week 2
 
-My next stand up will go here...
+Overview
+
+
+This week I expanded Crypt of the Damned beyond the basic Milestone 1 foundation. I improved the input validation, added usable Healing Potions, created multiple dungeon encounters, added three different enemies, and added ASCII artwork and more atmospheric console output.
+
+Challenges
+
+
+One challenge was improving the input validation based on my Milestone 1 feedback. I replaced the previous stream cleanup approach with a reusable try/catch-based method. I also had an issue where using a Healing Potion appeared not to increase health because the enemy attacked immediately afterward. I changed the program flow so the updated health is shown clearly and the enemy does not attack during the item-use action.
+
+Accomplishments
+
+
+I became more comfortable with exception handling and reusable input validation. I also expanded the inventory system so items now have an actual gameplay purpose and built dungeon progression using multiple enemy encounters stored in a vector. The game now feels much closer to a complete dungeon crawler instead of a single combat demonstration.
+
+Next Steps
+
+
+For Week 3, I plan to continue expanding the game with additional items, enemies, and dungeon mechanics. I also want to keep improving usability, game balance, and the overall structure of the code as the project grows.
 
 ### Week 3
 
