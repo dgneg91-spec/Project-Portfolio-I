@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
 #include <iostream>
+#include <random>
 
 Enemy::Enemy()
 {
@@ -10,7 +11,11 @@ Enemy::Enemy()
     goldReward = 5;
 }
 
-Enemy::Enemy(const std::string& enemyName, int enemyHealth, int enemyAttackPower, int reward)
+Enemy::Enemy(
+    const std::string& enemyName,
+    int enemyHealth,
+    int enemyAttackPower,
+    int reward)
 {
     name = enemyName;
     health = enemyHealth;
@@ -36,6 +41,37 @@ int Enemy::GetAttackPower() const
 int Enemy::GetGoldReward() const
 {
     return goldReward;
+}
+
+int Enemy::GetAttackDamage(std::string& attackName) const
+{
+    static std::random_device randomDevice;
+    static std::mt19937 randomEngine(randomDevice());
+
+    std::uniform_int_distribution<int> attackRoll(1, 100);
+
+    int roll = attackRoll(randomEngine);
+
+    if (name == "Crypt Ghoul")
+    {
+        if (roll <= 25)
+        {
+            attackName = "Savage Claw";
+            return 15;
+        }
+    }
+    else if (name == "Bone Knight")
+    {
+        if (roll <= 20)
+        {
+            attackName = "Crushing Blow";
+            return 20;
+        }
+    }
+
+    attackName = "Normal Attack";
+
+    return attackPower;
 }
 
 void Enemy::TakeDamage(int damage)
