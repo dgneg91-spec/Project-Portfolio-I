@@ -84,7 +84,41 @@ For Week 3, I plan to continue expanding the game with additional items, enemies
 
 ### Week 3
 
-Stay tuned, this stand up is coming soon...
+### Overview
+
+This week I focused on improving both the gameplay and the organization of Crypt of the Damned. I addressed the instructor feedback from Milestone 2, added meaningful pointer usage, improved combat balance, refactored the combat system into smaller functions, and added more unique enemy behavior.
+
+I also added new testing evidence and updated the Milestone 3 documentation to reflect the changes made to the project.
+
+### Improvements
+
+One major improvement was fixing the player reset system so health, gold, inventory, and defending state no longer carry over into a new game.
+
+I also changed Healing Potions so using one now counts as the player's turn and allows the enemy to attack afterward.
+
+The Defend system was improved significantly. Defending now has a 25% chance to completely block the enemy's attack and immediately counterattack for double damage. If the perfect block fails, the player still reduces the incoming damage by half.
+
+The combat system was also refactored into smaller functions so the code is easier to read and maintain. Separate functions now handle combat status, menus, player actions, item use, defending, enemy turns, and combat results.
+
+### Challenges
+
+One challenge was making Defend useful without making it too powerful. The original version only reduced damage, which made attacking almost always the better choice. I changed it into a risk and reward system with a smaller chance for a Perfect Block and counterattack while keeping the normal half-damage defense.
+
+Another challenge was adding pointer usage in a way that actually made sense for the program instead of adding a pointer only to satisfy the requirement. I used an Enemy pointer to track the current enemy being fought inside the dungeon.
+
+### Accomplishments
+
+One of my biggest accomplishments this week was becoming more comfortable refactoring existing code instead of only adding new features.
+
+I also improved my understanding of pointers by using `currentEnemy` to directly reference the Enemy object being fought.
+
+The combat system now feels more complete because Healing Potions are balanced, Defend has a meaningful purpose, damage feedback is clearer, and the Crypt Ghoul and Bone Knight have their own special attacks.
+
+### Next Steps
+
+Before Week 4, I plan to continue testing the game and fixing any remaining bugs or balance problems.
+
+I also plan to review the project requirements for the final milestone and focus on the remaining features needed to make the program feel complete, including the File I/O and save/load requirements for the final version.
 
 ### Week 4
 
