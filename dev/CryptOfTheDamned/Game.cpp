@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <random>
 
 Game::Game()
 {
@@ -166,6 +167,28 @@ void Game::DisplayDeathArt() const
 )";
 }
 
+void Game::DisplayCombatStatus() const
+{
+    std::cout << "\n----------------------------\n";
+
+    std::cout << player.GetName() << " HP: "
+        << player.GetHealth() << "/"
+        << player.GetMaxHealth() << "\n";
+
+    std::cout << currentEnemy->GetName() << " HP: "
+        << currentEnemy->GetHealth() << "\n";
+}
+
+void Game::DisplayCombatMenu() const
+{
+    std::cout << "\n1. Attack\n";
+    std::cout << "2. Defend\n";
+    std::cout << "3. View Stats\n";
+    std::cout << "4. View Inventory\n";
+    std::cout << "5. Use Item\n";
+    std::cout << "\nEnter choice: ";
+}
+
 int Game::GetMenuChoice(int minChoice, int maxChoice) const
 {
     std::string input;
@@ -325,116 +348,152 @@ void Game::StartDungeon()
     }
 }
 
-void Game::StartCombat()
+bool Game::HandleItemUse()
 {
-    if (currentEnemy == nullptr)
+    if (player.GetInventorySize() == 0)
     {
-        std::cout << "\nError: No enemy is available for combat.\n";
+        std::cout << "\nYour inventory is empty.\n";
+        return false;
+    }
+
+    player.DisplayInventory();
+
+    std::cout << "\nChoose an item to use: ";
+
+    int itemChoice = GetMenuChoice(
+        1,
+        player.GetInventorySize()
+    );
+
+    bool itemUsed = player.UseItem(itemChoice - 1);
+
+    if (itemUsed)
+    {
+        std::cout << "Current Health: "
+            << player.GetHealth()
+            << "/"
+            << player.GetMaxHealth()
+            << "\n";
+    }
+
+    return itemUsed;
+}
+
+bool Game::HandleDefend()
+{
+    static std::random_device randomDevice;
+    static std::mt19937 randomEngine(randomDevice());
+
+    std::uniform_int_distribution<int> blockRoll(1, 100);
+
+    int roll = blockRoll(randomEngine);
+
+    const int perfectBlockChance = 25;
+
+    std::cout << "\nYou raise your guard and prepare for the attack...\n";
+
+    if (roll <= perfectBlockChance)
+    {
+        int counterDamage = player.GetAttackPower() * 2;
+
+        std::cout << "\n*** PERFECT BLOCK! ***\n";
+        std::cout << "You completely block the "
+            << currentEnemy->GetName()
+            << "'s attack!\n";
+
+        std::cout << "You seize the opening and counterattack for "
+            << counterDamage
+            << " damage!\n";
+
+        currentEnemy->TakeDamage(counterDamage);
+
+        return false;
+    }
+
+    std::cout << "\nYou fail to perfectly block the attack,\n";
+    std::cout << "but your guard reduces the incoming damage.\n";
+
+    player.SetDefending(true);
+
+    return true;
+}
+
+bool Game::HandlePlayerAction(int choice)
+{
+    switch (choice)
+    {
+    case 1:
+        std::cout << "\nYou attack the "
+            << currentEnemy->GetName()
+            << " for "
+            << player.GetAttackPower()
+            << " damage!\n";
+
+        currentEnemy->TakeDamage(player.GetAttackPower());
+
+        return true;
+
+    case 2:
+        return HandleDefend();
+
+    case 3:
+        player.DisplayStats();
+        return false;
+
+    case 4:
+        player.DisplayInventory();
+        return false;
+
+    case 5:
+        return HandleItemUse();
+    }
+
+    return false;
+}
+
+void Game::ProcessEnemyTurn()
+{
+    if (!currentEnemy->IsAlive())
+    {
         return;
     }
 
-    DisplayEnemyArt(currentEnemy->GetName());
+    int enemyDamage = currentEnemy->GetAttackPower();
 
-    std::cout << "\nA " << currentEnemy->GetName() << " appears!\n";
+    bool playerWasDefending = player.IsDefending();
 
-    while (player.IsAlive() && currentEnemy->IsAlive())
+    int healthBefore = player.GetHealth();
+
+    player.TakeDamage(enemyDamage);
+
+    int actualDamageTaken = healthBefore - player.GetHealth();
+
+    std::cout << "\nThe "
+        << currentEnemy->GetName()
+        << " attacks for "
+        << enemyDamage
+        << " damage!\n";
+
+    if (playerWasDefending)
     {
-        std::cout << "\n----------------------------\n";
+        int damageBlocked = enemyDamage - actualDamageTaken;
 
-        std::cout << player.GetName() << " HP: "
-            << player.GetHealth() << "/"
-            << player.GetMaxHealth() << "\n";
-
-        std::cout << currentEnemy->GetName() << " HP: "
-            << currentEnemy->GetHealth() << "\n";
-
-        std::cout << "\n1. Attack\n";
-        std::cout << "2. Defend\n";
-        std::cout << "3. View Stats\n";
-        std::cout << "4. View Inventory\n";
-        std::cout << "5. Use Item\n";
-        std::cout << "\nEnter choice: ";
-
-        int choice = GetMenuChoice(1, 5);
-
-        bool playerUsedTurn = false;
-
-        switch (choice)
-        {
-        case 1:
-            std::cout << "\nYou attack the "
-                << currentEnemy->GetName()
-                << " for "
-                << player.GetAttackPower()
-                << " damage!\n";
-
-            currentEnemy->TakeDamage(player.GetAttackPower());
-
-            playerUsedTurn = true;
-            break;
-
-        case 2:
-            std::cout << "\nYou prepare to defend yourself.\n";
-
-            player.SetDefending(true);
-
-            playerUsedTurn = true;
-            break;
-
-        case 3:
-            player.DisplayStats();
-            break;
-
-        case 4:
-            player.DisplayInventory();
-            break;
-
-        case 5:
-        {
-            if (player.GetInventorySize() == 0)
-            {
-                std::cout << "\nYour inventory is empty.\n";
-                break;
-            }
-
-            player.DisplayInventory();
-
-            std::cout << "\nChoose an item to use: ";
-
-            int itemChoice = GetMenuChoice(
-                1,
-                player.GetInventorySize()
-            );
-
-            bool itemUsed = player.UseItem(itemChoice - 1);
-
-            if (itemUsed)
-            {
-                std::cout << "Current Health: "
-                    << player.GetHealth()
-                    << "/"
-                    << player.GetMaxHealth()
-                    << "\n";
-
-                playerUsedTurn = true;
-            }
-
-            break;
-        }
-        }
-
-        if (playerUsedTurn && currentEnemy->IsAlive())
-        {
-            std::cout << "\nThe "
-                << currentEnemy->GetName()
-                << " attacks you for "
-                << currentEnemy->GetAttackPower()
-                << " damage!\n";
-
-            player.TakeDamage(currentEnemy->GetAttackPower());
-        }
+        std::cout << "You block "
+            << damageBlocked
+            << " damage and take "
+            << actualDamageTaken
+            << " damage.\n";
     }
+    else
+    {
+        std::cout << "You take "
+            << actualDamageTaken
+            << " damage.\n";
+    }
+}
 
+void Game::ProcessCombatResult()
+{
     if (player.IsAlive())
     {
         std::cout << "\nYou defeated the "
@@ -455,4 +514,34 @@ void Game::StartCombat()
 
         running = false;
     }
+}
+
+void Game::StartCombat()
+{
+    if (currentEnemy == nullptr)
+    {
+        std::cout << "\nError: No enemy is available for combat.\n";
+        return;
+    }
+
+    DisplayEnemyArt(currentEnemy->GetName());
+
+    std::cout << "\nA " << currentEnemy->GetName() << " appears!\n";
+
+    while (player.IsAlive() && currentEnemy->IsAlive())
+    {
+        DisplayCombatStatus();
+        DisplayCombatMenu();
+
+        int choice = GetMenuChoice(1, 5);
+
+        bool enemyGetsTurn = HandlePlayerAction(choice);
+
+        if (enemyGetsTurn)
+        {
+            ProcessEnemyTurn();
+        }
+    }
+
+    ProcessCombatResult();
 }
