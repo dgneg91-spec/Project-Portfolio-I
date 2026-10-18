@@ -168,3 +168,15 @@ int Player::GetInventorySize() const
 {
     return static_cast<int>(inventory.size());
 }
+
+void Player::Reset()
+{
+    name = "Unknown";
+    health = 100;
+    maxHealth = 100;
+    attackPower = 15;
+    gold = 0;
+    defending = false;
+
+    inventory.clear();
+}

@@ -52,10 +52,10 @@ void Game::DisplayEnemyArt(const std::string& enemyName) const
     {
         std::cout << R"(
 
-              .-.
-             (o.o)
-              |=|
-             __|__
+             .-.
+            (o.o)
+             |=|
+            __|__
            //.=|=.\\
           // .=|=. \\
           \\ .=|=. //
@@ -65,7 +65,7 @@ void Game::DisplayEnemyArt(const std::string& enemyName) const
              () ()
              || ||
              || ||
-            ==' '==
+             ==' '==
 
         SKELETON WARRIOR
 )";
@@ -97,22 +97,22 @@ void Game::DisplayEnemyArt(const std::string& enemyName) const
     {
         std::cout << R"(
 
-                 /\
-                /  \
-               /____\
-              |      |
-              |  /\  |
-              | |  | |
-              | |  | |
-            __|_|__|_|__
-           /            \
-          /   ________   \
-         |   /        \   |
-         |  |          |  |
-         |  |          |  |
-         |  |__________|  |
-          \              /
-           \____________/
+                /\
+               /  \
+              /____\
+             |      |
+             |  /\  |
+             | |  | |
+             | |  | |
+           __|_|__|_|__
+          /            \
+         /   ________   \
+        |   /        \   |
+        |  |          |  |
+        |  |          |  |
+        |  |__________|  |
+         \              /
+          \____________/
 
              BONE KNIGHT
 )";
@@ -152,7 +152,7 @@ void Game::DisplayDeathArt() const
 
                     YOU HAVE FALLEN
 
-                         _____
+                        _____
                        /       \
                       |  x   x  |
                       |    ^    |
@@ -237,6 +237,8 @@ void Game::Run()
 
 void Game::StartGame()
 {
+    player.Reset();
+
     std::string playerName;
 
     std::cout << "\nEnter your character's name: ";

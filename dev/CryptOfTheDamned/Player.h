@@ -43,4 +43,6 @@ public:
 
     bool UseItem(int index);
     int GetInventorySize() const;
+
+    void Reset();
 };
