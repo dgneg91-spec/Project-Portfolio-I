@@ -8,6 +8,7 @@
 Game::Game()
 {
     running = true;
+    currentEnemy = nullptr;
 }
 
 void Game::DisplayTitle() const
@@ -238,6 +239,7 @@ void Game::Run()
 void Game::StartGame()
 {
     player.Reset();
+    currentEnemy = nullptr;
 
     std::string playerName;
 
@@ -276,6 +278,8 @@ void Game::StartDungeon()
             break;
         }
 
+        currentEnemy = &enemies[i];
+
         std::cout << "\n============================================================\n";
         std::cout << "                         FLOOR " << i + 1 << "\n";
         std::cout << "============================================================\n";
@@ -296,7 +300,7 @@ void Game::StartDungeon()
             std::cout << "An armored figure blocks your path...\n";
         }
 
-        StartCombat(enemies[i]);
+        StartCombat();
 
         if (player.IsAlive() && i < enemies.size() - 1)
         {
@@ -310,6 +314,8 @@ void Game::StartDungeon()
         }
     }
 
+    currentEnemy = nullptr;
+
     if (player.IsAlive())
     {
         DisplayVictoryArt();
@@ -319,21 +325,28 @@ void Game::StartDungeon()
     }
 }
 
-void Game::StartCombat(Enemy& enemy)
+void Game::StartCombat()
 {
-    DisplayEnemyArt(enemy.GetName());
+    if (currentEnemy == nullptr)
+    {
+        std::cout << "\nError: No enemy is available for combat.\n";
+        return;
+    }
 
-    std::cout << "\nA " << enemy.GetName() << " appears!\n";
+    DisplayEnemyArt(currentEnemy->GetName());
 
-    while (player.IsAlive() && enemy.IsAlive())
+    std::cout << "\nA " << currentEnemy->GetName() << " appears!\n";
+
+    while (player.IsAlive() && currentEnemy->IsAlive())
     {
         std::cout << "\n----------------------------\n";
+
         std::cout << player.GetName() << " HP: "
             << player.GetHealth() << "/"
             << player.GetMaxHealth() << "\n";
 
-        std::cout << enemy.GetName() << " HP: "
-            << enemy.GetHealth() << "\n";
+        std::cout << currentEnemy->GetName() << " HP: "
+            << currentEnemy->GetHealth() << "\n";
 
         std::cout << "\n1. Attack\n";
         std::cout << "2. Defend\n";
@@ -344,84 +357,94 @@ void Game::StartCombat(Enemy& enemy)
 
         int choice = GetMenuChoice(1, 5);
 
+        bool playerUsedTurn = false;
+
         switch (choice)
         {
         case 1:
             std::cout << "\nYou attack the "
-                << enemy.GetName()
+                << currentEnemy->GetName()
                 << " for "
                 << player.GetAttackPower()
                 << " damage!\n";
 
-            enemy.TakeDamage(player.GetAttackPower());
+            currentEnemy->TakeDamage(player.GetAttackPower());
+
+            playerUsedTurn = true;
             break;
 
         case 2:
             std::cout << "\nYou prepare to defend yourself.\n";
+
             player.SetDefending(true);
+
+            playerUsedTurn = true;
             break;
 
         case 3:
             player.DisplayStats();
-            continue;
+            break;
 
         case 4:
             player.DisplayInventory();
-            continue;
+            break;
 
         case 5:
         {
             if (player.GetInventorySize() == 0)
             {
                 std::cout << "\nYour inventory is empty.\n";
-                continue;
+                break;
             }
 
             player.DisplayInventory();
 
             std::cout << "\nChoose an item to use: ";
 
-            int itemChoice = GetMenuChoice(1, player.GetInventorySize());
+            int itemChoice = GetMenuChoice(
+                1,
+                player.GetInventorySize()
+            );
 
             bool itemUsed = player.UseItem(itemChoice - 1);
 
-            if (!itemUsed)
+            if (itemUsed)
             {
-                continue;
+                std::cout << "Current Health: "
+                    << player.GetHealth()
+                    << "/"
+                    << player.GetMaxHealth()
+                    << "\n";
+
+                playerUsedTurn = true;
             }
 
-            std::cout << "Current Health: "
-                << player.GetHealth()
-                << "/"
-                << player.GetMaxHealth()
-                << "\n";
-
-            continue;
+            break;
         }
         }
 
-        if (enemy.IsAlive())
+        if (playerUsedTurn && currentEnemy->IsAlive())
         {
             std::cout << "\nThe "
-                << enemy.GetName()
+                << currentEnemy->GetName()
                 << " attacks you for "
-                << enemy.GetAttackPower()
+                << currentEnemy->GetAttackPower()
                 << " damage!\n";
 
-            player.TakeDamage(enemy.GetAttackPower());
+            player.TakeDamage(currentEnemy->GetAttackPower());
         }
     }
 
     if (player.IsAlive())
     {
         std::cout << "\nYou defeated the "
-            << enemy.GetName()
+            << currentEnemy->GetName()
             << "!\n";
 
-        player.AddGold(enemy.GetGoldReward());
+        player.AddGold(currentEnemy->GetGoldReward());
 
         std::cout << "You earned "
-            << enemy.GetGoldReward()
+            << currentEnemy->GetGoldReward()
             << " gold.\n";
     }
     else
@@ -429,6 +452,7 @@ void Game::StartCombat(Enemy& enemy)
         DisplayDeathArt();
 
         std::cout << "\nYou have fallen in the Crypt of the Damned...\n";
+
         running = false;
     }
 }

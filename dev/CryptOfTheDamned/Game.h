@@ -11,6 +11,8 @@ private:
     Player player;
     bool running;
 
+    Enemy* currentEnemy;
+
     void DisplayTitle() const;
     void DisplayMainMenu() const;
     void DisplayEnemyArt(const std::string& enemyName) const;
@@ -18,7 +20,7 @@ private:
     void DisplayDeathArt() const;
 
     void StartGame();
-    void StartCombat(Enemy& enemy);
+    void StartCombat();
     void StartDungeon();
 
     int GetMenuChoice(int minChoice, int maxChoice) const;

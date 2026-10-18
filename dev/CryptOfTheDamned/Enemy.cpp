@@ -10,7 +10,11 @@ Enemy::Enemy()
     goldReward = 5;
 }
 
-Enemy::Enemy(const std::string& enemyName, int enemyHealth, int enemyAttackPower, int reward)
+Enemy::Enemy(
+    const std::string& enemyName,
+    int enemyHealth,
+    int enemyAttackPower,
+    int reward)
 {
     name = enemyName;
     health = enemyHealth;
