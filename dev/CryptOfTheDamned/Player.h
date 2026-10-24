@@ -32,6 +32,11 @@ public:
     void Heal(int amount);
 
     void AddGold(int amount);
+    bool SpendGold(int amount);
+
+    void IncreaseAttackPower(int amount);
+    void IncreaseMaxHealth(int amount);
+
     void AddItem(const Item& item);
 
     void SetDefending(bool value);

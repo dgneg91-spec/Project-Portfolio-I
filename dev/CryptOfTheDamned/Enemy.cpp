@@ -57,7 +57,7 @@ int Enemy::GetAttackDamage(std::string& attackName) const
         if (roll <= 25)
         {
             attackName = "Savage Claw";
-            return 15;
+            return 13;
         }
     }
     else if (name == "Bone Knight")
@@ -65,7 +65,23 @@ int Enemy::GetAttackDamage(std::string& attackName) const
         if (roll <= 20)
         {
             attackName = "Crushing Blow";
-            return 20;
+            return 17;
+        }
+    }
+    else if (name == "Grave Wraith")
+    {
+        if (roll <= 25)
+        {
+            attackName = "Soul Drain";
+            return 18;
+        }
+    }
+    else if (name == "Crypt Lord")
+    {
+        if (roll <= 20)
+        {
+            attackName = "Dark Execution";
+            return 22;
         }
     }
 

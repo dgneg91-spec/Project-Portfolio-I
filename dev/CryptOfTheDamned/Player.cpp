@@ -79,6 +79,39 @@ void Player::AddGold(int amount)
     gold += amount;
 }
 
+bool Player::SpendGold(int amount)
+{
+    if (amount <= 0)
+    {
+        return false;
+    }
+
+    if (gold < amount)
+    {
+        return false;
+    }
+
+    gold -= amount;
+
+    return true;
+}
+
+void Player::IncreaseAttackPower(int amount)
+{
+    attackPower += amount;
+}
+
+void Player::IncreaseMaxHealth(int amount)
+{
+    maxHealth += amount;
+    health += amount;
+
+    if (health > maxHealth)
+    {
+        health = maxHealth;
+    }
+}
+
 void Player::AddItem(const Item& item)
 {
     inventory.push_back(item);

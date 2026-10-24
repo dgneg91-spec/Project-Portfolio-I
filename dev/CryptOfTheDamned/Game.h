@@ -1,26 +1,24 @@
 #pragma once
 
-#include <string>
-
 #include "Player.h"
 #include "Enemy.h"
+#include "Shop.h"
+#include "GameUI.h"
+#include "RecordManager.h"
 
 class Game
 {
 private:
     Player player;
+    Shop shop;
+    GameUI ui;
+    RecordManager records;
+
     bool running;
 
     Enemy* currentEnemy;
 
-    void DisplayTitle() const;
-    void DisplayMainMenu() const;
-    void DisplayEnemyArt(const std::string& enemyName) const;
-    void DisplayVictoryArt() const;
-    void DisplayDeathArt() const;
-
-    void DisplayCombatStatus() const;
-    void DisplayCombatMenu() const;
+    bool perfectBlockActive;
 
     void StartGame();
     void StartCombat();
@@ -32,8 +30,6 @@ private:
 
     void ProcessEnemyTurn();
     void ProcessCombatResult();
-
-    int GetMenuChoice(int minChoice, int maxChoice) const;
 
 public:
     Game();
