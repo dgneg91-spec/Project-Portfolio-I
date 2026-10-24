@@ -120,6 +120,53 @@ void Game::DisplayEnemyArt(const std::string& enemyName) const
              BONE KNIGHT
 )";
     }
+    else if (enemyName == "Grave Wraith")
+    {
+        std::cout << R"(
+
+             .-""""-.
+           .'        '.
+          /    .--.    \
+         |    /    \    |
+         |   |  ()  |   |
+          \   \    /   /
+           '.  '--'  .'
+             '-.__.-'
+              / || \
+             /  ||  \
+                ||
+                ||
+               /  \
+
+           GRAVE WRAITH
+)";
+    }
+    else if (enemyName == "Crypt Lord")
+    {
+        std::cout << R"(
+
+                _________
+               /         \
+              /  /\   /\  \
+             |  /  \ /  \  |
+             | |    V    | |
+             | |  X   X  | |
+             | |    ^    | |
+              \ \  ___  / /
+               \ '-----' /
+                \_______/
+               ___|   |___
+              /           \
+             /             \
+            |               |
+            |    CRYPT      |
+            |     LORD      |
+             \             /
+              \___________/
+
+              CRYPT LORD
+)";
+    }
 }
 
 void Game::DisplayVictoryArt() const
@@ -302,14 +349,6 @@ void Game::StartGame()
 
     player.SetName(playerName);
 
-    Item healingPotion(
-        "Healing Potion",
-        "Healing",
-        30
-    );
-
-    player.AddItem(healingPotion);
-
     std::cout
         << "\nWelcome, "
         << player.GetName()
@@ -319,7 +358,7 @@ void Game::StartGame()
         << "You descend into the Crypt of the Damned...\n";
 
     std::cout
-        << "A Healing Potion has been added to your inventory.\n";
+        << "You enter with no supplies and no gold.\n";
 
     StartDungeon();
 }
@@ -352,6 +391,24 @@ void Game::StartDungeon()
             70,
             12,
             25
+        )
+    );
+
+    enemies.push_back(
+        Enemy(
+            "Grave Wraith",
+            85,
+            14,
+            35
+        )
+    );
+
+    enemies.push_back(
+        Enemy(
+            "Crypt Lord",
+            110,
+            16,
+            50
         )
     );
 
@@ -399,6 +456,25 @@ void Game::StartDungeon()
             std::cout
                 << "An armored figure blocks your path...\n";
         }
+        else if (i == 3)
+        {
+            std::cout
+                << "\nThe torches suddenly die.\n";
+
+            std::cout
+                << "A pale shape floats through the stone wall...\n";
+        }
+        else if (i == 4)
+        {
+            std::cout
+                << "\nA massive iron door opens by itself.\n";
+
+            std::cout
+                << "The ruler of the crypt rises from his throne...\n";
+
+            std::cout
+                << "\nThis is the final battle.\n";
+        }
 
         StartCombat();
 
@@ -413,18 +489,12 @@ void Game::StartDungeon()
                 << ".\n";
 
             std::cout
-                << "You continue deeper into the crypt...\n";
+                << "You find a quiet chamber before continuing deeper.\n";
 
-            Item healingPotion(
-                "Healing Potion",
-                "Healing",
-                30
-            );
-
-            player.AddItem(healingPotion);
+            shop.Open(player);
 
             std::cout
-                << "You found another Healing Potion.\n";
+                << "\nYou continue deeper into the crypt...\n";
         }
     }
 
@@ -435,11 +505,23 @@ void Game::StartDungeon()
         DisplayVictoryArt();
 
         std::cout
-            << "\nYou survived every encounter in the crypt!\n";
+            << "\nYou defeated the Crypt Lord and survived the entire dungeon!\n";
 
         std::cout
-            << "Final Gold: "
+            << "Final Gold Remaining: "
             << player.GetGold()
+            << "\n";
+
+        std::cout
+            << "Final Attack Power: "
+            << player.GetAttackPower()
+            << "\n";
+
+        std::cout
+            << "Final Health: "
+            << player.GetHealth()
+            << "/"
+            << player.GetMaxHealth()
             << "\n";
     }
 }
@@ -673,6 +755,11 @@ void Game::ProcessCombatResult()
             << "You earned "
             << currentEnemy->GetGoldReward()
             << " gold.\n";
+
+        std::cout
+            << "Current Gold: "
+            << player.GetGold()
+            << "\n";
     }
     else
     {

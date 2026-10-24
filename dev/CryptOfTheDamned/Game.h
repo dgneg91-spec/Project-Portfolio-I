@@ -4,11 +4,14 @@
 
 #include "Player.h"
 #include "Enemy.h"
+#include "Shop.h"
 
 class Game
 {
 private:
     Player player;
+    Shop shop;
+
     bool running;
 
     Enemy* currentEnemy;

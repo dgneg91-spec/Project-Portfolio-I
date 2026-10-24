@@ -68,6 +68,22 @@ int Enemy::GetAttackDamage(std::string& attackName) const
             return 20;
         }
     }
+    else if (name == "Grave Wraith")
+    {
+        if (roll <= 25)
+        {
+            attackName = "Soul Drain";
+            return 22;
+        }
+    }
+    else if (name == "Crypt Lord")
+    {
+        if (roll <= 20)
+        {
+            attackName = "Dark Execution";
+            return 28;
+        }
+    }
 
     attackName = "Normal Attack";
 

@@ -12,6 +12,7 @@ private:
 
 public:
     Enemy();
+
     Enemy(
         const std::string& enemyName,
         int enemyHealth,
