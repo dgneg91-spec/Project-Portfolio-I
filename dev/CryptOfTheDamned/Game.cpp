@@ -110,8 +110,8 @@ void Game::StartDungeon()
     enemies.push_back(
         Enemy(
             "Crypt Ghoul",
-            55,
-            10,
+            50,
+            9,
             15
         )
     );
@@ -119,8 +119,8 @@ void Game::StartDungeon()
     enemies.push_back(
         Enemy(
             "Bone Knight",
-            70,
-            12,
+            60,
+            11,
             25
         )
     );
@@ -128,8 +128,8 @@ void Game::StartDungeon()
     enemies.push_back(
         Enemy(
             "Grave Wraith",
-            85,
-            14,
+            70,
+            12,
             35
         )
     );
@@ -137,8 +137,8 @@ void Game::StartDungeon()
     enemies.push_back(
         Enemy(
             "Crypt Lord",
-            110,
-            16,
+            85,
+            14,
             50
         )
     );
@@ -311,8 +311,7 @@ bool Game::HandleItemUse()
 
 bool Game::HandleDefend()
 {
-    static std::random_device
-        randomDevice;
+    static std::random_device randomDevice;
 
     static std::mt19937 randomEngine(
         randomDevice()
@@ -329,8 +328,7 @@ bool Game::HandleDefend()
             randomEngine
         );
 
-    const int perfectBlockChance =
-        25;
+    const int perfectBlockChance = 25;
 
     std::cout
         << "\nYou raise your guard and prepare for the attack...\n";

@@ -15,10 +15,10 @@ void Shop::DisplayMenu(const Player& player) const
     std::cout << "\n1. Healing Potion - 10 Gold\n";
     std::cout << "   Restores 30 Health\n";
 
-    std::cout << "\n2. Sharpen Weapon - 20 Gold\n";
+    std::cout << "\n2. Sharpen Weapon - 15 Gold\n";
     std::cout << "   Permanently increases Attack Power by 5\n";
 
-    std::cout << "\n3. Vitality Blessing - 25 Gold\n";
+    std::cout << "\n3. Vitality Blessing - 20 Gold\n";
     std::cout << "   Permanently increases Max Health by 20\n";
     std::cout << "   and immediately restores 20 Health\n";
 
@@ -107,7 +107,7 @@ void Shop::BuyHealingPotion(Player& player) const
 
 void Shop::BuyAttackUpgrade(Player& player) const
 {
-    const int price = 20;
+    const int price = 15;
 
     if (!player.SpendGold(price))
     {
@@ -129,7 +129,7 @@ void Shop::BuyAttackUpgrade(Player& player) const
 
 void Shop::BuyHealthUpgrade(Player& player) const
 {
-    const int price = 25;
+    const int price = 20;
 
     if (!player.SpendGold(price))
     {
