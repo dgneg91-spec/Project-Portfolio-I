@@ -10,6 +10,7 @@ Game::Game()
 {
     running = true;
     currentEnemy = nullptr;
+    perfectBlockActive = false;
 }
 
 void Game::DisplayTitle() const
@@ -282,6 +283,7 @@ void Game::StartGame()
     player.Reset();
 
     currentEnemy = nullptr;
+    perfectBlockActive = false;
 
     std::string playerName;
 
@@ -499,34 +501,21 @@ bool Game::HandleDefend()
 
     if (roll <= perfectBlockChance)
     {
-        int counterDamage =
-            player.GetAttackPower() * 2;
+        perfectBlockActive = true;
 
         std::cout
-            << "\n*** PERFECT BLOCK! ***\n";
+            << "\nYou find the perfect defensive opening...\n";
 
-        std::cout
-            << "You completely block the "
-            << currentEnemy->GetName()
-            << "'s attack!\n";
-
-        std::cout
-            << "You seize the opening and counterattack for "
-            << counterDamage
-            << " damage!\n";
-
-        currentEnemy->TakeDamage(
-            counterDamage
-        );
-
-        return false;
+        return true;
     }
 
-    std::cout
-        << "\nYou fail to perfectly block the attack,\n";
+    perfectBlockActive = false;
 
     std::cout
-        << "but your guard reduces the incoming damage.\n";
+        << "\nYou fail to find a perfect opening,\n";
+
+    std::cout
+        << "but your guard will reduce the incoming damage.\n";
 
     player.SetDefending(true);
 
@@ -573,6 +562,7 @@ void Game::ProcessEnemyTurn()
 {
     if (!currentEnemy->IsAlive())
     {
+        perfectBlockActive = false;
         return;
     }
 
@@ -582,12 +572,6 @@ void Game::ProcessEnemyTurn()
         currentEnemy->GetAttackDamage(
             attackName
         );
-
-    bool playerWasDefending =
-        player.IsDefending();
-
-    int healthBefore =
-        player.GetHealth();
 
     if (attackName == "Normal Attack")
     {
@@ -612,6 +596,37 @@ void Game::ProcessEnemyTurn()
             << enemyDamage
             << " damage!\n";
     }
+
+    if (perfectBlockActive)
+    {
+        int counterDamage =
+            player.GetAttackPower();
+
+        std::cout
+            << "\n*** PERFECT BLOCK! ***\n";
+
+        std::cout
+            << "You completely block the attack and take 0 damage!\n";
+
+        std::cout
+            << "You counterattack for "
+            << counterDamage
+            << " damage!\n";
+
+        currentEnemy->TakeDamage(
+            counterDamage
+        );
+
+        perfectBlockActive = false;
+
+        return;
+    }
+
+    bool playerWasDefending =
+        player.IsDefending();
+
+    int healthBefore =
+        player.GetHealth();
 
     player.TakeDamage(enemyDamage);
 
@@ -641,6 +656,8 @@ void Game::ProcessEnemyTurn()
 
 void Game::ProcessCombatResult()
 {
+    perfectBlockActive = false;
+
     if (player.IsAlive())
     {
         std::cout
@@ -677,6 +694,8 @@ void Game::StartCombat()
 
         return;
     }
+
+    perfectBlockActive = false;
 
     DisplayEnemyArt(
         currentEnemy->GetName()

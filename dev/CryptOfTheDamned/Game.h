@@ -13,6 +13,8 @@ private:
 
     Enemy* currentEnemy;
 
+    bool perfectBlockActive;
+
     void DisplayTitle() const;
     void DisplayMainMenu() const;
     void DisplayEnemyArt(const std::string& enemyName) const;
