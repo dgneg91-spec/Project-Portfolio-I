@@ -122,4 +122,64 @@ I also plan to review the project requirements for the final milestone and focus
 
 ### Week 4
 
-My final stand up...
+Overview
+
+This week I focused on completing and polishing Crypt of the Damned for the final milestone.
+
+I worked on balancing combat, improving the dungeon progression, adding a use for gold, expanding the class structure, and implementing File I/O.
+
+What I Improved
+
+Rebalanced the Perfect Block mechanic so it is useful without being too powerful.
+
+Added a Grave Merchant shop where gold can be spent.
+
+Added permanent Attack Power and Maximum Health upgrades.
+
+Removed the free starting Healing Potion so the shop and gold economy matter more.
+
+Expanded the dungeon from three floors to five floors.
+
+Added the Grave Wraith and Crypt Lord.
+
+Added new enemy special attacks.
+
+Rebalanced later enemies and shop prices after testing showed the dungeon was too difficult.
+
+Refactored display and input responsibilities into a separate GameUI class.
+
+Added a RecordManager class for persistent File I/O and the Hall of Records.
+
+Challenges
+
+One of the biggest challenges this week was balancing the difficulty of the full dungeon.
+
+After expanding the game to five floors, the later enemies were too difficult and I was consistently dying before reaching the end. I adjusted enemy health, attack damage, special attacks, and shop prices to make the difficulty progression more reasonable.
+
+Another challenge was keeping Game.cpp maintainable as more features were added. I addressed this by moving display and input responsibilities into the GameUI class.
+
+Accomplishments
+
+I am most satisfied with the overall structure of the final project.
+
+The game now has multiple interacting classes, meaningful pointer usage, a shop economy, permanent upgrades, unique enemy abilities, input validation, inventory management, five dungeon floors, and File I/O.
+
+I also addressed the instructor feedback from previous milestones, including resetting player state, balancing Healing Potion turns, improving Perfect Block, giving gold a purpose, and reducing the responsibilities of Game.cpp.
+
+Next Steps
+
+The remaining work is focused on final testing and submission.
+
+I still need to:
+
+Complete final testing.
+
+Capture final screenshots.
+
+Confirm the Hall of Records persistence through a completed run.
+
+Review the GitHub Project board.
+
+Create and merge the final dev-to-main pull request.
+
+Submit the final repository and Project board evidence.
