@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <stdexcept>
 #include <vector>
 #include <random>
 
@@ -13,293 +12,19 @@ Game::Game()
     perfectBlockActive = false;
 }
 
-void Game::DisplayTitle() const
-{
-    std::cout << R"(
-============================================================
-                   CRYPT OF THE DAMNED
-============================================================
-
-                         ______
-                      .-"      "-.
-                     /            \
-                    |              |
-                    |,  .-.  .-.  ,|
-                    | )(_o/  \o_)( |
-                    |/     /\     \|
-                    (_     ^^     _)
-                     \__|IIIIII|__/
-                      \ IIIIIIII /
-                       `--------`
-
-                   ENTER IF YOU DARE
-
-============================================================
-)";
-}
-
-void Game::DisplayMainMenu() const
-{
-    std::cout << "\n================ MAIN MENU ================\n";
-    std::cout << "1. Start Game\n";
-    std::cout << "2. View Player Stats\n";
-    std::cout << "3. View Inventory\n";
-    std::cout << "4. Exit\n";
-    std::cout << "===========================================\n";
-    std::cout << "\nEnter choice: ";
-}
-
-void Game::DisplayEnemyArt(const std::string& enemyName) const
-{
-    if (enemyName == "Skeleton Warrior")
-    {
-        std::cout << R"(
-
-             .-.
-            (o.o)
-             |=|
-            __|__
-           //.=|=.\\
-          // .=|=. \\
-          \\ .=|=. //
-           \\(_=_)//
-            (:| |:)
-             || ||
-             () ()
-             || ||
-             || ||
-             ==' '==
-
-        SKELETON WARRIOR
-)";
-    }
-    else if (enemyName == "Crypt Ghoul")
-    {
-        std::cout << R"(
-
-              .------.
-             /        \
-            /  _    _  \
-           |  / \  / \  |
-           |  \_/  \_/  |
-           |     /\     |
-           |   .____.   |
-            \  \____/  /
-             \        /
-              \______/
-              /|    |\
-             / |    | \
-            /  |    |  \
-               |    |
-              /      \
-
-           CRYPT GHOUL
-)";
-    }
-    else if (enemyName == "Bone Knight")
-    {
-        std::cout << R"(
-
-                /\
-               /  \
-              /____\
-             |      |
-             |  /\  |
-             | |  | |
-             | |  | |
-           __|_|__|_|__
-          /            \
-         /   ________   \
-        |   /        \   |
-        |  |          |  |
-        |  |          |  |
-        |  |__________|  |
-         \              /
-          \____________/
-
-             BONE KNIGHT
-)";
-    }
-    else if (enemyName == "Grave Wraith")
-    {
-        std::cout << R"(
-
-             .-""""-.
-           .'        '.
-          /    .--.    \
-         |    /    \    |
-         |   |  ()  |   |
-          \   \    /   /
-           '.  '--'  .'
-             '-.__.-'
-              / || \
-             /  ||  \
-                ||
-                ||
-               /  \
-
-           GRAVE WRAITH
-)";
-    }
-    else if (enemyName == "Crypt Lord")
-    {
-        std::cout << R"(
-
-                _________
-               /         \
-              /  /\   /\  \
-             |  /  \ /  \  |
-             | |    V    | |
-             | |  X   X  | |
-             | |    ^    | |
-              \ \  ___  / /
-               \ '-----' /
-                \_______/
-               ___|   |___
-              /           \
-             /             \
-            |               |
-            |    CRYPT      |
-            |     LORD      |
-             \             /
-              \___________/
-
-              CRYPT LORD
-)";
-    }
-}
-
-void Game::DisplayVictoryArt() const
-{
-    std::cout << R"(
-
-============================================================
-
-                     VICTORY
-
-                  \       /
-                   \     /
-                    \   /
-                     \ /
-                      V
-
-                 ______________
-                |              |
-                |   SURVIVOR   |
-                |______________|
-
-          THE CRYPT COULD NOT CLAIM YOU
-
-============================================================
-)";
-}
-
-void Game::DisplayDeathArt() const
-{
-    std::cout << R"(
-
-============================================================
-
-                    YOU HAVE FALLEN
-
-                        _____
-                       /       \
-                      |  x   x  |
-                      |    ^    |
-                      |  \___/  |
-                       \_______/
-
-                   REST AMONG THE DEAD
-
-============================================================
-)";
-}
-
-void Game::DisplayCombatStatus() const
-{
-    std::cout << "\n----------------------------\n";
-
-    std::cout << player.GetName() << " HP: "
-        << player.GetHealth() << "/"
-        << player.GetMaxHealth() << "\n";
-
-    std::cout << currentEnemy->GetName() << " HP: "
-        << currentEnemy->GetHealth() << "\n";
-}
-
-void Game::DisplayCombatMenu() const
-{
-    std::cout << "\n1. Attack\n";
-    std::cout << "2. Defend\n";
-    std::cout << "3. View Stats\n";
-    std::cout << "4. View Inventory\n";
-    std::cout << "5. Use Item\n";
-    std::cout << "\nEnter choice: ";
-}
-
-int Game::GetMenuChoice(int minChoice, int maxChoice) const
-{
-    std::string input;
-
-    while (true)
-    {
-        std::getline(std::cin, input);
-
-        try
-        {
-            size_t charactersUsed = 0;
-
-            int choice = std::stoi(
-                input,
-                &charactersUsed
-            );
-
-            if (charactersUsed != input.length())
-            {
-                throw std::invalid_argument(
-                    "Extra characters entered."
-                );
-            }
-
-            if (choice < minChoice || choice > maxChoice)
-            {
-                throw std::out_of_range(
-                    "Choice outside valid range."
-                );
-            }
-
-            return choice;
-        }
-        catch (const std::invalid_argument&)
-        {
-            std::cout
-                << "Invalid input. Please enter a whole number between "
-                << minChoice
-                << " and "
-                << maxChoice
-                << ": ";
-        }
-        catch (const std::out_of_range&)
-        {
-            std::cout
-                << "That choice is out of range. Please enter a number between "
-                << minChoice
-                << " and "
-                << maxChoice
-                << ": ";
-        }
-    }
-}
-
 void Game::Run()
 {
-    DisplayTitle();
+    ui.DisplayTitle();
 
     while (running)
     {
-        DisplayMainMenu();
+        ui.DisplayMainMenu();
 
-        int choice = GetMenuChoice(1, 4);
+        int choice =
+            ui.GetMenuChoice(
+                1,
+                5
+            );
 
         switch (choice)
         {
@@ -316,6 +41,10 @@ void Game::Run()
             break;
 
         case 4:
+            records.DisplayRecords();
+            break;
+
+        case 5:
             std::cout
                 << "\nLeaving the Crypt of the Damned...\n";
 
@@ -347,7 +76,9 @@ void Game::StartGame()
         playerName = "Nameless";
     }
 
-    player.SetName(playerName);
+    player.SetName(
+        playerName
+    );
 
     std::cout
         << "\nWelcome, "
@@ -412,14 +143,19 @@ void Game::StartDungeon()
         )
     );
 
-    for (size_t i = 0; i < enemies.size(); i++)
+    for (
+        size_t i = 0;
+        i < enemies.size();
+        i++
+        )
     {
         if (!player.IsAlive())
         {
             break;
         }
 
-        currentEnemy = &enemies[i];
+        currentEnemy =
+            &enemies[i];
 
         std::cout
             << "\n============================================================\n";
@@ -491,7 +227,9 @@ void Game::StartDungeon()
             std::cout
                 << "You find a quiet chamber before continuing deeper.\n";
 
-            shop.Open(player);
+            shop.Open(
+                player
+            );
 
             std::cout
                 << "\nYou continue deeper into the crypt...\n";
@@ -502,7 +240,7 @@ void Game::StartDungeon()
 
     if (player.IsAlive())
     {
-        DisplayVictoryArt();
+        ui.DisplayVictoryArt();
 
         std::cout
             << "\nYou defeated the Crypt Lord and survived the entire dungeon!\n";
@@ -523,12 +261,18 @@ void Game::StartDungeon()
             << "/"
             << player.GetMaxHealth()
             << "\n";
+
+        records.SaveSuccessfulRun(
+            player
+        );
     }
 }
 
 bool Game::HandleItemUse()
 {
-    if (player.GetInventorySize() == 0)
+    if (
+        player.GetInventorySize() == 0
+        )
     {
         std::cout
             << "\nYour inventory is empty.\n";
@@ -541,13 +285,16 @@ bool Game::HandleItemUse()
     std::cout
         << "\nChoose an item to use: ";
 
-    int itemChoice = GetMenuChoice(
-        1,
-        player.GetInventorySize()
-    );
+    int itemChoice =
+        ui.GetMenuChoice(
+            1,
+            player.GetInventorySize()
+        );
 
     bool itemUsed =
-        player.UseItem(itemChoice - 1);
+        player.UseItem(
+            itemChoice - 1
+        );
 
     if (itemUsed)
     {
@@ -564,24 +311,34 @@ bool Game::HandleItemUse()
 
 bool Game::HandleDefend()
 {
-    static std::random_device randomDevice;
+    static std::random_device
+        randomDevice;
 
     static std::mt19937 randomEngine(
         randomDevice()
     );
 
     std::uniform_int_distribution<int>
-        blockRoll(1, 100);
+        blockRoll(
+            1,
+            100
+        );
 
     int roll =
-        blockRoll(randomEngine);
+        blockRoll(
+            randomEngine
+        );
 
-    const int perfectBlockChance = 25;
+    const int perfectBlockChance =
+        25;
 
     std::cout
         << "\nYou raise your guard and prepare for the attack...\n";
 
-    if (roll <= perfectBlockChance)
+    if (
+        roll <=
+        perfectBlockChance
+        )
     {
         perfectBlockActive = true;
 
@@ -599,12 +356,16 @@ bool Game::HandleDefend()
     std::cout
         << "but your guard will reduce the incoming damage.\n";
 
-    player.SetDefending(true);
+    player.SetDefending(
+        true
+    );
 
     return true;
 }
 
-bool Game::HandlePlayerAction(int choice)
+bool Game::HandlePlayerAction(
+    int choice
+)
 {
     switch (choice)
     {
@@ -627,10 +388,12 @@ bool Game::HandlePlayerAction(int choice)
 
     case 3:
         player.DisplayStats();
+
         return false;
 
     case 4:
         player.DisplayInventory();
+
         return false;
 
     case 5:
@@ -645,6 +408,7 @@ void Game::ProcessEnemyTurn()
     if (!currentEnemy->IsAlive())
     {
         perfectBlockActive = false;
+
         return;
     }
 
@@ -655,7 +419,10 @@ void Game::ProcessEnemyTurn()
             attackName
         );
 
-    if (attackName == "Normal Attack")
+    if (
+        attackName ==
+        "Normal Attack"
+        )
     {
         std::cout
             << "\nThe "
@@ -710,15 +477,19 @@ void Game::ProcessEnemyTurn()
     int healthBefore =
         player.GetHealth();
 
-    player.TakeDamage(enemyDamage);
+    player.TakeDamage(
+        enemyDamage
+    );
 
     int actualDamageTaken =
-        healthBefore - player.GetHealth();
+        healthBefore -
+        player.GetHealth();
 
     if (playerWasDefending)
     {
         int damageBlocked =
-            enemyDamage - actualDamageTaken;
+            enemyDamage -
+            actualDamageTaken;
 
         std::cout
             << "You block "
@@ -763,7 +534,7 @@ void Game::ProcessCombatResult()
     }
     else
     {
-        DisplayDeathArt();
+        ui.DisplayDeathArt();
 
         std::cout
             << "\nYou have fallen in the Crypt of the Damned...\n";
@@ -774,7 +545,9 @@ void Game::ProcessCombatResult()
 
 void Game::StartCombat()
 {
-    if (currentEnemy == nullptr)
+    if (
+        currentEnemy == nullptr
+        )
     {
         std::cout
             << "\nError: No enemy is available for combat.\n";
@@ -784,7 +557,7 @@ void Game::StartCombat()
 
     perfectBlockActive = false;
 
-    DisplayEnemyArt(
+    ui.DisplayEnemyArt(
         currentEnemy->GetName()
     );
 
@@ -798,15 +571,23 @@ void Game::StartCombat()
         currentEnemy->IsAlive()
         )
     {
-        DisplayCombatStatus();
+        ui.DisplayCombatStatus(
+            player,
+            *currentEnemy
+        );
 
-        DisplayCombatMenu();
+        ui.DisplayCombatMenu();
 
         int choice =
-            GetMenuChoice(1, 5);
+            ui.GetMenuChoice(
+                1,
+                5
+            );
 
         bool enemyGetsTurn =
-            HandlePlayerAction(choice);
+            HandlePlayerAction(
+                choice
+            );
 
         if (enemyGetsTurn)
         {
